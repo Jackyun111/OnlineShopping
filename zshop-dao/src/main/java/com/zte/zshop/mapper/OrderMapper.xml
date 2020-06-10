@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zte.zshop.dao.OrderDao">
+
+        <resultMap id="orderMap" type="Order">
+                <id property="id" column="id"/>
+                <result property="no" column="no"/>
+                <result property="price" column="price"/>
+                <result property="createDate" column="create_date"/>
+                <result property="status" column="status"/>
+
+                <association property="customer" column="customer_id" javaType="Customer">
+                        <id property="id" column="tc.id"/>
+                        <id property="name" column="tc.name"/>
+                </association>
+                
+        </resultMap>
+
+    <resultMap id="orderMap2" type="Order">
+        <id property="id" column="id"/>
+        <result property="no" column="no"/>
+        <result property="price" column="price"/>
+        <result property="createDate" column="create_date"/>
+        <result property="status" column="status"/>
+
+        <association property="customer" column="customer_id" javaType="Customer">
+            <id property="id" column="customer_id"/>
+        </association>
+
+    </resultMap>
+        
+        <!--
+        //订单生成，插入数据库
+    public void insert(Order order);
+        -->
+        <select id="insert" parameterType="Order">
+                INSERT
+                INTO
+                t_order
+                (no,customer_id,price,create_date,status)
+                VALUES(#{no},#{customer.id},#{price},#{createDate},#{status})
+
+        </select>
+
+        <!--
+                查询所有订单，并输入
+                 public List<Order> selectAll();
+        -->
+        <!--<select id="selectAll" resultMap="orderMap2">
+                SELECT
+                tr.id,tr.no,tr.price,tr.create_date,tr.status,tr.customer_id,tc.id 'tc.id',tc.name 'tc.name'
+                FROM
+                t_order tr
+                LEFT JOIN t_customer tc
+                ON tr.customer_id = tc.id
+        </select>-->
+        <select id="selectAll" resultMap="orderMap2">
+            SELECT
+            id,no,customer_id,price,create_date,status
+            FROM
+            t_order
+        </select>
+
+        <!--
+            删除订单
+            public void delOrder(Integer id);
+        -->
+        <select id="delOrder">
+            DELETE
+            FROM
+            t_order
+            WHERE
+            id=#{id}
+        </select>
+
+        <!--
+            根据订单ID查询订单详情
+            public Order selectById(Integer id);
+        -->
+        <select id="selectById" resultMap="orderMap">
+            SELECT
+            tr.id,tr.no,tr.price,tr.create_date,tr.status,tr.customer_id,tc.id 'tc.id',tc.name 'tc.name'
+            FROM
+            t_order tr
+            LEFT JOIN t_customer tc
+            ON tr.customer_id = tc.id
+            WHERE tr.id=#{id}
+        </select>
+
+
+        <!--
+            根据客户id 查询其订单
+            public List<Order> selectByCustomerId(Integer customerId);
+        -->
+        <select id="selectByCustomerId" resultMap="orderMap2">
+            SELECT
+            id,no,customer_id,price,create_date,status
+            FROM
+            t_order
+            WHERE customer_id=#{customerId}
+        </select>
+
+        <!--
+        public Integer selectOrderIdByOrderNo(String orderNo);
+        -->
+        <select id="selectOrderIdByOrderNo" parameterType="String">
+            SELECT
+            id
+            FROM
+            t_order
+            WHERE
+            no=#{orderNo}
+        </select>
+
+        <!--
+        public void insertOrderIdByOrderNo(@Param("orderId")Integer orderId,@Param("orderNo") String orderNo);
+        -->
+        <select id="insertOrderIdByOrderNo">
+            INSERT
+            INTO
+            t_item
+            (order_id)
+            VALUES
+            (#{orderId})
+            WHERE
+            order_no=#{orderNo}
+        </select>
+
+        <!--
+        public Order selectIdByNo(String orderNo);
+        -->
+        <select id="selectIdByNo" resultMap="orderMap2" parameterType="String">
+            SELECT
+            id,no,customer_id,price,create_date,status
+            FROM
+            t_order
+            WHERE
+            no=#{orderNo}
+        </select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+

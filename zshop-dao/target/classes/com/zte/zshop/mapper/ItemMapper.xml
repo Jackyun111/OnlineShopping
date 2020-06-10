@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zte.zshop.dao.ItemDao">
+
+        <resultMap id="itemMap" type="Item">
+                <id property="id" column="id"/>
+                <result property="num" column="num"/>
+                <result property="price" column="price"/>
+                <result property="orderId" column="order_id"/>
+                <result property="orderNo" column="order_no"/>
+                <result property="productId" column="product_id"/>
+        </resultMap>
+
+        <!--
+        public void insertNewItem(Item item);
+        -->
+        <select id="insertNewItem" parameterType="Item">
+                INSERT
+                INTO
+                t_item
+                (product_id,num,price,order_no,order_id)
+                VALUES
+                (#{productId},#{num},#{price},#{orderNo},#{orderId})
+        </select>
+
+        <!--
+        public List<Item> selectByOrderId(Integer orderId);
+        -->
+       <!--<select id="selectByOrderId" resultMap="itemMap2">
+                SELECT
+                tm.id,tm.num,tm.price,tm.order_id,tm.order_no,tp.id 'tp.id',tp.name 'tp.name'
+                FROM
+                t_item tm
+                LEFT JOIN t_product tp
+                ON tm.product_id = tp.id
+                WHERE WHERE tm.order_id =#{orderId}
+        </select>-->
+        <select id="selectByOrderId" resultMap="itemMap">
+                SELECT
+                id,product_id,num,price,order_id,order_no
+                FROM
+                t_item
+                WHERE
+                order_id=#{orderId}
+        </select>
+
+
+
+
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+

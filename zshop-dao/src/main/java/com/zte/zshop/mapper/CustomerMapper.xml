@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zte.zshop.dao.CustomerDao">
+
+        <resultMap id="customerMap" type="Customer">
+                <id property="id" column="id"/>
+                <result property="name" column="name"/>
+                <result property="loginName" column="login_name"/>
+                <result property="password" column="password"/>
+                <result property="phone" column="phone"/>
+                <result property="address" column="address"/>
+                <result property="isValid" column="is_valid"/>
+                <result property="registDate" column="regist_date"/>
+                <result property="image" column="image"/>
+        </resultMap>
+
+        <!--
+        public List<Customer> selectAll();
+        -->
+        <select id="selectAll" resultMap="customerMap">
+                SELECT
+                id,name,login_name,password,phone,address,is_valid,regist_date
+                FROM
+                t_customer
+        </select>
+
+        <!--
+         public Customer selectById(Integer id);
+        -->
+        <select id="selectById" resultMap="customerMap">
+                SELECT
+                id,name,login_name,password,phone,address,is_valid,regist_date
+                FROM
+                t_customer
+                WHERE
+                id=#{id}
+        </select>
+
+        <!--
+         public void update(Customer customer);
+        -->
+        <select id="update" parameterType="Customer">
+                UPDATE
+                t_customer
+                SET
+                name=#{name},
+                phone=#{phone},
+                address=#{address}
+                WHERE
+                id=#{id}
+        </select>
+
+        <!--
+        public void updateStatus(@Param("id") Integer id,@Param("isValid") Integer isValid);
+        -->
+        <select id="updateStatus">
+                UPDATE
+                t_customer
+                SET
+                is_valid=#{isValid}
+                WHERE
+                id=#{id}
+        </select>
+
+        <!--
+         public List<Customer> selectByParam(CustomerParam customerParam);
+        -->
+        <select id="selectByParam" parameterType="com.zte.zshop.params.CustomerParam" resultMap="customerMap">
+                SELECT
+                id,name,login_name,password,phone,address,is_valid,regist_date
+                FROM
+                t_customer
+                <where>
+                        <if test="name!=null and name!=''">
+                                and name like concat(concat('%',#{name}),'%')
+                        </if>
+                        <if test="loginName!=null and loginName!=''">
+                                and login_name like concat(concat('%',#{loginName}),'%')
+                        </if>
+                        <if test="phone!=null and phone!=''">
+                                and phone=#{phone}
+                        </if>
+                        <if test="address!=null and address!=''">
+                                and address like concat(concat('%',#{address}),'%')
+                        </if>
+                        <if test="isValid!=null and isValid!=-1">
+                                and is_valid=#{isValid}
+                        </if>
+                </where>
+
+        </select>
+
+        <!--
+        public Customer selectByNameAndPass(@Param("loginName")String loginName, @Param("password")String password,@Param("isValid") int isValid);
+        -->
+        <select id="selectByNameAndPass" resultMap="customerMap">
+                SELECT
+                id,name,login_name,password,phone,address,is_valid,regist_date,image
+                FROM
+                t_customer
+                WHERE
+                login_name=#{loginName}
+                AND
+                password=#{password}
+                AND is_valid=#{isValid}
+        </select>
+
+
+        <!--
+        public void updatePassByNameAndPass(@Param("loginName")String customerName, @Param("password")String newPass);
+        -->
+        <select id="updatePassByNameAndPass">
+                UPDATE
+                t_customer
+                SET
+                password=#{password}
+                WHERE
+                login_name=#{loginName}
+        </select>
+
+
+        <!--
+         public Customer selectByPhone(String phone);
+        -->
+        <select id="selectByPhone" resultType="Customer">
+                select
+                id,name,login_name 'loginName',password,phone,address,is_valid 'isValid',regist_date 'registDate'
+                FROM
+                t_customer
+                where
+                phone=#{phone}
+        </select>
+
+
+        <!--
+        public Customer selectByLoginName(String loginName);
+        -->
+        <select id="selectByLoginName" resultType="Customer">
+                select
+                id,name,login_name 'loginName',password,phone,address,is_valid 'isValid',regist_date 'registDate'
+                FROM
+                t_customer
+                where
+                login_name=#{loginName}
+        </select>
+
+
+        <!--
+        public Customer selectByName(String name);
+        -->
+        <select id="selectByName" resultType="Customer">
+                select
+                id,name,login_name 'loginName',password,phone,address,is_valid 'isValid',regist_date 'registDate'
+                FROM
+                t_customer
+                where
+                name=#{name}
+        </select>
+
+
+        <!--
+         public void insertNewCustomer(Customer customer);
+        -->
+        <select id="insertNewCustomer" parameterType="Customer">
+                INSERT
+                INTO
+                t_customer
+                (name,login_name,password,phone,address,is_valid,regist_date)
+                VALUES
+                (#{name},#{loginName},#{password},#{phone},#{address},#{isValid},#{registDate})
+        </select>
+
+
+        <!--
+        public void insertImage(Customer customer);
+        -->
+        <select id="insertImage" parameterType="customer">
+                UPDATE
+                t_customer
+                SET
+                image=#{image}
+                WHERE
+                id=#{id}
+        </select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

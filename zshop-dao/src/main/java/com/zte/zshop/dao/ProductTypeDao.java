@@ -1,0 +1,32 @@
+package com.zte.zshop.dao;
+
+import com.zte.zshop.entity.ProductType;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+/**
+ * Author:helloboy
+ * Date:2019-05-12 20:14
+ * Description:<描述>
+ */
+@Repository
+public interface ProductTypeDao {
+
+    public List<ProductType> selectAll();
+
+    public ProductType selectByName(String productTypeName);
+
+    public void insert(@Param("name")String name,@Param("status") int status);
+
+    public ProductType selectById(Integer id);
+
+    public void updataName(@Param("id")Integer id,@Param("name") String name);
+
+    public void deleteById(Integer id);
+
+    public void updataStatus(@Param("id")Integer id,@Param("status") Integer status);
+
+    public List<ProductType> selectByStatus(int status);
+}

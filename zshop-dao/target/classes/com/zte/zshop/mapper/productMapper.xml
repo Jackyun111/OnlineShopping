@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zte.zshop.dao.ProductDao">
+
+
+    <resultMap id="productMap" type="product">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="price" column="price"/>
+        <result property="image" column="image"/>
+        <result property="info" column="info"/>
+        <result property="status" column="status"/>
+        <result property="amount" column="amount"/>
+
+        <association property="productType" column="product_type_id" javaType="ProductType">
+            <id property="id" column="pt.id"/>
+            <result property="name" column="pt.name"/>
+            <result property="status" column="pt.status"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="productMap2" type="product">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="price" column="price"/>
+        <result property="image" column="image"/>
+        <result property="info" column="info"/>
+        <result property="status" column="status"/>
+        <result property="amount" column="amount"/>
+
+        <association property="productType" column="product_type_id" javaType="ProductType">
+            <id property="id" column="product_type_id"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="productMap3" type="product">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="price" column="price"/>
+        <result property="image" column="image"/>
+        <result property="info" column="info"/>
+        <result property="status" column="status"/>
+        <result property="amount" column="amount"/>
+
+        <association property="productType" column="product_type_id" javaType="ProductType">
+            <id property="id" column="pt.id"/>
+            <result property="name" column="pt.name"/>
+        </association>
+    </resultMap>
+
+    <!--
+     public void insert(Product product);
+    -->
+    <select id="insert" parameterType="product">
+        INSERT
+        INTO
+        t_product
+        (name,price,info,status,amount,image,product_type_id)
+        VALUES
+        (#{name},#{price},#{info},#{status},#{amount},#{image},#{productType.id})
+    </select>
+
+    <!--
+     public Product selectByName(String name);
+    -->
+    <select id="selectByName" resultType="Product">
+        SELECT
+        id,name,price,info,image,product_type_id
+        FROM
+        t_product
+        WHERE
+        name=#{name}
+    </select>
+
+    <!--
+     public List<Product> selectAll();
+    -->
+    <select id="selectAll" resultMap="productMap">
+        SELECT
+        p.id,p.name,p.price,p.info,p.image,p.status,p.amount,p.product_type_id,pt.id 'pt.id',pt.name 'pt.name',pt.status 'pt.status'
+        FROM
+        t_product p
+        LEFT JOIN t_product_type pt
+        ON p.product_type_id = pt.id
+    </select>
+
+    <!--
+    public Product selectById(Integer id);
+    -->
+    <select id="selectById" resultMap="productMap2">
+        SELECT
+        id,name,price,info,image,status,amount,product_type_id
+        FROM
+        t_product
+        WHERE
+        id=#{id}
+    </select>
+
+    <!--
+    public void update(Product product);
+    -->
+    <update id="update" parameterType="Product">
+        UPDATE
+        t_product
+        SET
+        name=#{name},
+        price=#{price},
+        info=#{info},
+        amount=#{amount},
+        <if test="image!=null">
+            image=#{image},
+        </if>
+        product_type_id=#{productType.id}
+        WHERE
+        id=#{id}
+    </update>
+
+    <!--
+      public void deleteById(Integer id);
+    -->
+    <select id="deleteById">
+        DELETE
+        FROM
+        t_product
+        WHERE
+        id=#{id}
+    </select>
+
+    <!--
+    public List<Product> selectByParam(ProductParam productParam);
+    -->
+    <select id="selectByParam" resultMap="productMap2" parameterType="com.zte.zshop.params.ProductParam">
+
+        SELECT
+
+        id,name,price,info,image,product_type_id,status
+        FROM
+
+        t_product
+        <where>
+            <if test="name!=null and name!=''">
+                and name like concat(concat('%',#{name}),'%')
+            </if>
+            <if test="minPrice!=null and maxPrice!=null">
+                and price between #{minPrice} and #{maxPrice}
+            </if>
+            <if test="minPrice!=null">
+                and price &gt;= #{minPrice}
+            </if>
+            <if test="maxPrice !=null">
+                and price &lt;= #{maxPrice}
+            </if>
+            <if test="productTypeId!=null and productTypeId!=-1">
+                and product_type_id=#{productTypeId}
+            </if>
+        </where>
+    </select>
+
+    <!--
+     public Product selectByFrontId(Integer id);
+    -->
+    <select id="selectByFrontId" resultMap="productMap3">
+        SELECT
+        p.id,p.name,p.price,p.info,p.image,p.status,p.amount,p.product_type_id,pt.id 'pt.id',pt.name 'pt.name'
+        FROM
+        t_product p
+        LEFT JOIN t_product_type pt
+        ON p.product_type_id = pt.id
+        WHERE p.id=#{id}
+    </select>
+
+    <!--
+    public void updateStatus(@Param("id")int id,@Param("status") int status);
+    -->
+    <select id="updateStatus" >
+        UPDATE
+        t_product
+        SET
+        status=#{status}
+        WHERE
+        id=#{id}
+    </select>
+
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
